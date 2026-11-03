@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>上大记忆 · 口述档案数字展</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+<meta name="description" content="上海大学口述档案数字展——收录星火相传、学术星光两栏 11 位上大人物口述故事，配校史时间线与「我的上大记忆」记忆征集台。">
+<meta property="og:title" content="上大记忆 · 口述档案数字展">
+<meta property="og:description" content="上海大学口述档案数字展——收录星火相传、学术星光两栏 11 位上大人物口述故事，配校史时间线与「我的上大记忆」记忆征集台。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://gsesptapxztaujfyxnkv.supabase.co/storage/v1/object/public/shmemory/yck1_0.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231A365D'/><path d='M50 22 L50 76' stroke='%23D4A843' stroke-width='8' stroke-linecap='round'/><path d='M32 40 L68 40' stroke='%23D4A843' stroke-width='8' stroke-linecap='round'/><path d='M40 66 L60 66' stroke='%23D4A843' stroke-width='8' stroke-linecap='round'/></svg>">
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
 <style>
 :root {
@@ -273,6 +278,8 @@ body {
 .fm-applied-x:hover { color:#9C3D2E; }
 
 .fm-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:0 18px; }
+.fm-catrow { margin-bottom:14px; }
+.fm-cat { display:inline-flex; gap:6px; flex-wrap:wrap; }
 .fm-f { display:block; margin-bottom:14px; }
 .fm-f em { display:block; font-style:normal; font-size:12px; color:var(--text-light); margin-bottom:6px; letter-spacing:0.5px; }
 .fm-f input, .fm-f select, .fm-f textarea { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid var(--border); border-radius:4px; font-family:inherit; font-size:14px; color:var(--text); background:#fff; }
@@ -317,6 +324,7 @@ body {
 .fm-tag.y { color:#8A6D28; background:#FBF3DD; border:1px solid #E3CE9A; }
 .fm-tag.p { color:var(--navy); background:rgba(26,54,93,0.06); border:1px solid rgba(26,54,93,0.12); }
 .fm-tag.r { color:#8A7A63; background:#F6F1E8; border:1px solid var(--border); }
+.fm-tag.k { color:#6B4E1B; background:rgba(184,134,11,0.10); border:1px solid rgba(184,134,11,0.28); }
 .fm-card-body { font-size:14px; line-height:1.75; color:var(--text); white-space:pre-wrap; word-break:break-word; margin-bottom:12px; }
 .fm-card-foot { display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px dashed var(--border); font-size:11.5px; color:#A99B84; }
 .fm-card-author { color:var(--navy); font-size:12.5px; }
@@ -514,6 +522,7 @@ body {
 .tl-stats { display:flex; justify-content:center; gap:26px; flex-wrap:wrap; margin-top:16px; }
 .tl-stat b { font-family:'Noto Serif SC',serif; font-size:22px; color:var(--gold); font-weight:900; }
 .tl-stat span { font-size:12px; color:var(--text-light); margin-left:5px; }
+.main-tl-stats { margin:0 0 22px; padding:14px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
 .tl-filters { display:flex; flex-wrap:wrap; align-items:center; gap:10px 18px; padding:14px 16px; background:var(--paper); border:1px solid var(--border); border-radius:8px; margin-bottom:14px; }
 .tl-fg { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
 .tl-fg > em { font-style:normal; font-size:12px; color:var(--text-light); margin-right:2px; }
@@ -734,6 +743,7 @@ body {
     </div>
   </div>
   <div class="timeline-wrap">
+    <div class="tl-stats main-tl-stats" id="mainTlStats"></div>
     <div class="timeline-legend">
       <div class="legend-item"><span class="legend-dot school"></span>校史大事</div>
       <div class="legend-item"><span class="legend-dot person"></span>人物故事</div>
@@ -780,6 +790,17 @@ body {
         </label>
         <label class="fm-f"><em>相关年份</em><input id="fmYear" type="number" min="1922" max="2026" placeholder="如 1958，选填"></label>
         <label class="fm-f"><em>关联人物</em><select id="fmPerson"><option value="">不指定</option></select></label>
+      </div>
+
+      <div class="fm-f fm-full fm-catrow"><em>记忆分类（选填）</em>
+        <span class="fm-cat" id="fmCat">
+          <button type="button" class="fm-chip" data-k="校史" onclick="fmPickCat('校史',this)">校史</button>
+          <button type="button" class="fm-chip" data-k="人物" onclick="fmPickCat('人物',this)">人物</button>
+          <button type="button" class="fm-chip" data-k="校园" onclick="fmPickCat('校园',this)">校园</button>
+          <button type="button" class="fm-chip" data-k="生活" onclick="fmPickCat('生活',this)">生活</button>
+          <button type="button" class="fm-chip" data-k="实物" onclick="fmPickCat('实物',this)">实物</button>
+          <button type="button" class="fm-chip" data-k="其他" onclick="fmPickCat('其他',this)">其他</button>
+        </span>
       </div>
 
       <label class="fm-f fm-full"><em>你的记忆</em>
@@ -876,7 +897,7 @@ const TIMELINE = [
   { label: '1940年代', nodes: [
     { year: '1942', type: 'person', idx: 1, person: '陈伯时', title: '陈伯时入上海大同大学附中', desc: '跳级直升高中，高中三年成绩始终全班第一。' },
     { year: '1942', type: 'person', idx: 9, person: '钱伟长', title: '钱伟长获多伦多大学博士学位', desc: '提出板壳内禀统一理论，国际学界称其方程组为"钱伟长方程"。' },
-    { year: '1944', type: 'person', idx: 10, person: '黄宏嘉', title: '黄宏嘉弃笔从戎', desc: '投考国立西南联大电机系后参加中国远征军，任少校翻译官，在缅北丛林服役一年半。' },
+    { year: '1944', type: 'person', idx: 10, person: '黄宏嘉', title: '黄宏嘉弃笔从戎', desc: '1944年毕业于国立西南联大电机系，随即投笔从戎参加中国远征军，任少校翻译官，在缅北丛林服役一年半。' },
     { year: '1944', type: 'person', idx: 5, person: '张培础', title: '张培础出生', desc: '生于上海，祖籍江苏太仓，自幼酷爱绘画。' },
     { year: '1946', type: 'person', idx: 1, person: '陈伯时', title: '陈伯时考入清华大学', desc: '考入清华大学电机系二年级，1949年本科毕业留校任教。' },
     { year: '1949', type: 'person', idx: 10, person: '黄宏嘉', title: '黄宏嘉放弃博士回国', desc: '放弃密歇根大学即将到手的博士学位，响应新中国召唤立即回国。' }
@@ -943,6 +964,7 @@ const TIMELINE = [
   ]},
   { label: '2020年代', nodes: [
     { year: '2021', type: 'person', idx: 1, person: '陈伯时', title: '陈伯时获"杰出贡献奖"', desc: '荣获中国电源学会科学技术奖最高个人荣誉"杰出贡献奖"。' },
+    { year: '2021', type: 'person', idx: 10, person: '黄宏嘉', title: '黄宏嘉院士逝世', desc: '9月22日在上海逝世，享年97岁。' },
     { year: '2022', type: 'person', idx: 6, person: '李三立', title: '李三立逝世', desc: '因病在北京逝世，享年87岁。' },
     { year: '2022', type: 'person', idx: 10, person: '黄宏嘉', title: '宏嘉书院设立', desc: '以黄宏嘉院士之名设立本科生书院，院训"宏才远志，嘉言善行"。' },
     { year: '2025', type: 'person', idx: 1, person: '陈伯时', title: '陈伯时教材第6版', desc: '开始改写第6版，为机械工业出版社印数最多教材，累计印量140多万册。' },
@@ -953,6 +975,15 @@ const TIMELINE = [
 function renderTimeline() {
   const el = document.getElementById('timelineList');
   if (!el) return;
+  const statEl = document.getElementById('mainTlStats');
+  if (statEl) {
+    const totalNodes = TIMELINE.reduce((a, e) => a + e.nodes.length, 0);
+    const schoolNodes = TIMELINE.reduce((a, e) => a + e.nodes.filter(n => n.type === 'school').length, 0);
+    statEl.innerHTML =
+      `<div class="tl-stat"><b>${PEOPLE.length}</b><span>位口述者</span></div>
+       <div class="tl-stat"><b>${totalNodes}</b><span>个时间节点</span></div>
+       <div class="tl-stat"><b>${schoolNodes}</b><span>个校史节点</span></div>`;
+  }
   el.innerHTML = TIMELINE.map(era => `
     <div class="era">
       <div class="era-head"><span>${era.label}</span></div>
@@ -2067,7 +2098,7 @@ var FM_PROMPTS = [
   { y:0,    p:'',      t:'食堂、图书馆、操场，哪个画面你最常想起来？', k:'生活' }
 ];
 
-var FM_TOPICS = ['全部','校史','人物','校园','生活','实物'];
+var FM_TOPICS = ['全部','校史','人物','校园','生活','实物','其他'];
 var FM_ROLE_TXT = { '校友':'校友', '教职工':'教职工', '家属':'家属', '在校生':'在校生', '其他':'其他' };
 
 function fmEsc(s){
@@ -2186,6 +2217,7 @@ function fmRender(){
     const m = p.meta;
     const tags = [];
     if (m.y) tags.push('<span class="fm-tag y">' + m.y + ' 年</span>');
+    if (m.k && m.k !== '自由记忆') tags.push('<span class="fm-tag k">' + fmEsc(m.k) + '</span>');
     if (m.p) tags.push('<span class="fm-tag p">' + fmEsc(m.p) + '</span>');
     if (m.r) tags.push('<span class="fm-tag r">' + fmEsc(m.r) + '</span>');
     const author = (m.g === 'anon') ? '匿名' : fmEsc(p.name);
@@ -2211,10 +2243,15 @@ function fmRender(){
 function fmMore(){ fmShown += FM_PAGE; fmRender(); }
 
 function fmSetTopic(t, btn){
+  if (t === '全部') t = 'all';
   fmTopic = t;
   fmShown = FM_PAGE;
   document.querySelectorAll('#fmTopicFilter .fm-chip').forEach(b => b.classList.toggle('on', b.dataset.t === t));
   fmRender();
+}
+
+function fmPickCat(k, btn){
+  document.querySelectorAll('#fmCat .fm-chip').forEach(b => b.classList.toggle('on', b.dataset.k === k));
 }
 
 /* ---- 问题卡预填 ---- */
@@ -2232,6 +2269,7 @@ function fmApplyPrompt(i, btn){
     '<span class="fm-applied-x" onclick="fmClearPrompt()" title="清除">×</span>';
   box.classList.add('on');
   document.querySelectorAll('.fm-prompt').forEach((b, j) => b.classList.toggle('on', j === i));
+  document.querySelectorAll('#fmCat .fm-chip').forEach(b => b.classList.toggle('on', b.dataset.k === p.k));
   document.getElementById('fmForm').scrollIntoView({ behavior:'smooth', block:'start' });
   setTimeout(() => document.getElementById('fmText').focus(), 400);
 }
@@ -2240,6 +2278,7 @@ function fmClearPrompt(){
   fmPicked = null;
   document.getElementById('fmApplied').classList.remove('on');
   document.querySelectorAll('.fm-prompt').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('#fmCat .fm-chip').forEach(b => b.classList.remove('on'));
   document.getElementById('fmYear').value = '';
   document.getElementById('fmPerson').value = '';
 }
@@ -2307,6 +2346,11 @@ function fmSubmit(btn){
   if (year && (year < 1922 || year > FM_YEAR)) { fmToast('年份请填 1922 到 ' + FM_YEAR + ' 之间，或留空。'); return; }
   if (contact.length > 100) { fmToast('联系方式太长了，请精简到 100 字以内。'); return; }
 
+  let cat = '';
+  const catBox = document.getElementById('fmCat');
+  if (catBox) { const on = catBox.querySelector('.fm-chip.on'); cat = on ? on.dataset.k : ''; }
+  if (!cat && fmPicked && fmPicked.k) cat = fmPicked.k;
+
   const cd = parseInt(localStorage.getItem('fm_cd') || '0', 10);
   if (Date.now() - cd < 60000) {
     const left = Math.ceil((60000 - (Date.now() - cd)) / 1000);
@@ -2314,7 +2358,7 @@ function fmSubmit(btn){
     return;
   }
 
-  const meta = { y: year || 0, p: person || '', r: role || '', g: consent, k: (fmPicked && fmPicked.k) || '自由记忆' };
+  const meta = { y: year || 0, p: person || '', r: role || '', g: consent, k: cat };
   const imgInput = document.getElementById('fmImg');
   const file = imgInput && imgInput.files && imgInput.files[0] ? imgInput.files[0] : null;
 
@@ -2380,9 +2424,10 @@ function fmInit(){
 
   const tf = document.getElementById('fmTopicFilter');
   if (tf && !tf.children.length) {
-    tf.innerHTML = FM_TOPICS.map(t =>
-      '<button class="fm-chip' + (t === 'all' ? ' on' : '') + '" data-t="' + t + '" onclick="fmSetTopic(\'' + t + '\',this)">' + (t === 'all' ? '全部' : t) + '</button>'
-    ).join('');
+    tf.innerHTML = FM_TOPICS.map(t => {
+      const key = (t === '全部') ? 'all' : t;
+      return '<button class="fm-chip' + (key === 'all' ? ' on' : '') + '" data-t="' + key + '" onclick="fmSetTopic(\'' + key + '\',this)">' + t + '</button>';
+    }).join('');
   }
 
   const ps = document.getElementById('fmPerson');
